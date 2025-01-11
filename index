@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Reviews</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8">Service Reviews</h1>
+        
+        <!-- Stats Section -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-lg font-semibold mb-2">Average Rating</h2>
+                <p id="avgRating" class="text-2xl font-bold text-blue-600">-</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-lg font-semibold mb-2">Total Reviews</h2>
+                <p id="totalReviews" class="text-2xl font-bold text-green-600">-</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-lg font-semibold mb-2">Total Votes</h2>
+                <p id="totalVotes" class="text-2xl font-bold text-purple-600">-</p>
+            </div>
+        </div>
+
+        <!-- Reviews List -->
+        <div id="reviewsList" class="space-y-4">
+            <!-- Reviews will be inserted here -->
+        </div>
+    </div>
+
+    <script>
+        async function loadReviews() {
+            try {
+                const response = await fetch('reviews.json'); // Ruta del archivo JSON
+                if (!response.ok) {
+                    throw new Error('Error al cargar el archivo JSON');
+                }
+                const reviews = await response.json(); // Parsear el contenido a un objeto
+                console.log('Reviews cargadas:', reviews);
+    
+                // Procesar las reviews, por ejemplo, mostrarlas en la página
+                renderReviews(reviews);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    
+        // Renderizar las reviews en la página
+        function renderReviews(reviews) {
+            const container = document.getElementById('reviews-container');
+            reviews.forEach(review => {
+                const reviewElement = document.createElement('div');
+                reviewElement.innerHTML = `
+                    <h3>${review.name} (${review.band_name})</h3>
+                    <p>Date: ${review.date}</p>
+                    <p>Review: ${review.rev.review}</p>
+                    <p>Satisfaction Level: ${review.rev.satisfaction_level}</p>
+                    <p>Votes: ${review.rev.votes}</p>
+                `;
+                container.appendChild(reviewElement);
+            });
+        }
+    
+        // Llamar la función al cargar la página
+        window.onload = loadReviews;
+        // Calculate statistics
+        function calculateStats() {
+            const avgRating = reviews.reduce((acc, r) => acc + r.rev.satisfaction_level, 0) / reviews.length;
+            const totalVotes = reviews.reduce((acc, r) => acc + r.rev.votes, 0);
+
+            document.getElementById('avgRating').textContent = avgRating.toFixed(1);
+            document.getElementById('totalReviews').textContent = reviews.length;
+            document.getElementById('totalVotes').textContent = totalVotes;
+        }
+
+        // Generate star rating HTML
+        function getStarRating(rating) {
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            let stars = '';
+            
+            for (let i = 0; i < 5; i++) {
+                if (i < fullStars) {
+                    stars += '★';
+                } else if (i === fullStars && hasHalfStar) {
+                    stars += '⭐';
+                } else {
+                    stars += '☆';
+                }
+            }
+            
+            return stars;
+        }
+
+        // Render reviews
+        function renderReviews() {
+            const reviewsList = document.getElementById('reviewsList');
+            reviewsList.innerHTML = reviews.map(review => `
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-semibold">${review.band_name}</h3>
+                            <p class="text-gray-600">by ${review.name}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-gray-500">${review.date}</p>
+                            <p class="text-sm text-gray-500">${review.rev.votes} votes</p>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <span class="text-yellow-400 text-xl">${getStarRating(review.rev.satisfaction_level)}</span>
+                        <span class="text-gray-600 ml-2">${review.rev.satisfaction_level}</span>
+                    </div>
+                    <p class="text-gray-700">${review.rev.review}</p>
+                </div>
+            `).join('');
+        }
+
+        // Initialize
+        calculateStats();
+        renderReviews();
+    </script>
+<div id="reviews-container"></div>
+</body>
+</html>
