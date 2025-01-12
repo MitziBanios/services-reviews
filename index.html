@@ -834,6 +834,7 @@
             reviews.forEach((review) => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
+                    <td>${review.id}</td>
                     <td>${review.band_name}</td>
                     <td>${review.name}</td>
                     <td>${review.date}</td>
