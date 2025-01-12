@@ -94,9 +94,11 @@
         }
 
         function renderReviews(reviews) {
+            console.log('Rendering reviews:', reviews);
             const tableBody = document.querySelector('#reviewsTable tbody');
             tableBody.innerHTML = ''; 
             reviews.forEach(review => {
+                console.log('Review:', review);
                 const row = `
                     <tr>
                         <td class="border border-gray-300 px-4 py-2">${review.band_name}</td>
