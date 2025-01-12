@@ -29,6 +29,22 @@
 
         </div>
     </div>
+    <div>
+      <h2>Service Reviews</h2>
+      <table id="reviewsTable" class="table-auto w-full border-collapse border border-gray-300">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="border border-gray-300 px-4 py-2">Band Name</th>
+            <th class="border border-gray-300 px-4 py-2">Reviewer Name</th>
+            <th class="border border-gray-300 px-4 py-2">Date</th>
+            <th class="border border-gray-300 px-4 py-2">Satisfaction Level</th>
+            <th class="border border-gray-300 px-4 py-2">Votes</th>
+            <th class="border border-gray-300 px-4 py-2">Review</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
     <script>
         let reviews = [];
@@ -78,26 +94,21 @@
         }
 
         function renderReviews(reviews) {
-            const reviewsList = document.getElementById('reviewsList');
-            reviewsList.innerHTML = reviews.map(review => `
-                <div class="bg-white p-6 rounded-lg shadow">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">${review.band_name}</h3>
-                            <p class="text-gray-600">by ${review.name}</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-gray-500">${review.date}</p>
-                            <p class="text-sm text-gray-500">${review.rev.votes} votes</p>
-                        </div>
-                    </div>
-                    <div class="mb-2">
-                        <span class="text-yellow-400 text-xl">${getStarRating(review.rev.satisfaction_level)}</span>
-                        <span class="text-gray-600 ml-2">${review.rev.satisfaction_level}</span>
-                    </div>
-                    <p class="text-gray-700">${review.rev.review}</p>
-                </div>
-            `).join('');
+            const tableBody = document.document.querySelector('#reviewsTable tbody');
+            tableBody.innerHTML = ''; 
+            reviews.forEach(review => {
+                const row = `
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">${review.band_name}</td>
+                        <td class="border border-gray-300 px-4 py-2">${review.name}</td>
+                        <td class="border border-gray-300 px-4 py-2">${review.date}</td>
+                        <td class="border border-gray-300 px-4 py-2">${review.rev.satisfaction_level}</td>
+                        <td class="border border-gray-300 px-4 py-2">${review.rev.votes}</td>
+                        <td class="border border-gray-300 px-4 py-2">${review.rev.review}</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row; 
+            });
         }
 
         window.onload = loadReviews;
