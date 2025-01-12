@@ -4,50 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Service Reviews</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100">
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-8">Service Reviews</h1>
-        
-        <!-- Stats Section -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="text-lg font-semibold mb-2">Average Rating</h2>
-                <p id="avgRating" class="text-2xl font-bold text-blue-600">-</p>
-            </div>
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="text-lg font-semibold mb-2">Total Reviews</h2>
-                <p id="totalReviews" class="text-2xl font-bold text-green-600">-</p>
-            </div>
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="text-lg font-semibold mb-2">Total Votes</h2>
-                <p id="totalVotes" class="text-2xl font-bold text-purple-600">-</p>
-            </div>
-        </div>
-        <div id="reviewsList" class="space-y-4">
-
-        </div>
-    </div>
-    <div>
-      <h2>Service Reviews</h2>
-      <table id="reviewsTable" class="table-auto w-full border-collapse border border-gray-300">
+<body>
+    <h1>Service Reviews</h1>
+    <table border="1">
         <thead>
-          <tr class="bg-gray-200">
-            <th class="border border-gray-300 px-4 py-2">Band Name</th>
-            <th class="border border-gray-300 px-4 py-2">Reviewer Name</th>
-            <th class="border border-gray-300 px-4 py-2">Date</th>
-            <th class="border border-gray-300 px-4 py-2">Satisfaction Level</th>
-            <th class="border border-gray-300 px-4 py-2">Votes</th>
-            <th class="border border-gray-300 px-4 py-2">Review</th>
-          </tr>
+            <tr>
+                <th>Band Name</th>
+                <th>Reviewer Name</th>
+                <th>Date</th>
+                <th>Satisfaction Level</th>
+                <th>Votes</th>
+                <th>Review</th>
+            </tr>
         </thead>
-        <tbody></tbody>
-      </table>
-    </div>
+        <tbody id="tableBody">
+        </tbody>
+    </table>
 
     <script>
-        const reviews =[
+        // Datos JSON directamente en el código
+        const reviews = [
                 {"id":1,"name":"Leigh Scolland","band_name":"Crimson Horizon","date":"12/20/2024","rev":{"review":"do not buy from this company","satisfaction_level":3.3,"votes":1}},
                 {"id":2,"name":"Hilda Oller","band_name":"Emerald Echo","date":"8/14/2024","rev":{"review":"Terrible experience","satisfaction_level":0.9,"votes":2}},
                 {"id":3,"name":"Florenza Edwards","band_name":"Sapphire Sound","date":"7/6/2024","rev":{"review":"Terrible experience","satisfaction_level":0.6,"votes":3}},
@@ -850,36 +827,10 @@
                 {"id":800,"name":"Renie Domney","band_name":"Emerald Echo","date":"1/14/2024","rev":{"review":"very disappointed","satisfaction_level":4.8,"votes":800}}
         ]; 
 
-        function calculateStats(reviews) {
-            const avgRating = reviews.reduce((acc, r) => acc + r.rev.satisfaction_level, 0) / reviews.length;
-            const totalVotes = reviews.reduce((acc, r) => acc + r.rev.votes, 0);
-
-            document.getElementById('avgRating').textContent = avgRating.toFixed(1);
-            document.getElementById('totalReviews').textContent = reviews.length;
-            document.getElementById('totalVotes').textContent = totalVotes;
-        }
-
-        function getStarRating(rating) {
-            const fullStars = Math.floor(rating);
-            const hasHalfStar = rating % 1 >= 0.5;
-            let stars = '';
-            
-            for (let i = 0; i < 5; i++) {
-                if (i < fullStars) {
-                    stars += '★';
-                } else if (i === fullStars && hasHalfStar) {
-                    stars += '⭐';
-                } else {
-                    stars += '☆';
-                }
-            }
-            
-            return stars;
-        }
-
+        // Función para renderizar los datos en la tabla
         function renderReviews() {
             const tableBody = document.getElementById("tableBody");
-            tableBody.innerHTML = ''; 
+            tableBody.innerHTML = ''; // Limpia cualquier contenido previo
             reviews.forEach((review) => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
@@ -893,10 +844,11 @@
                 tableBody.appendChild(row);
             });
         }
+
+        // Renderiza la tabla al cargar la página
         document.addEventListener("DOMContentLoaded", () => {
             renderReviews();
         });
-       // window.onload = loadReviews;
     </script>
 </body>
 </html>
